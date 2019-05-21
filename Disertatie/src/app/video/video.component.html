@@ -1,8 +1,9 @@
 <div id='main_container'>
   <div id='content_container'>
     <div id='controls_container' class='grey lighten-3 z-depth-1'>
-      <div class="file-field input-field" id='video_picker' (click)="chooseSourceVideo()">
-        <div class="btn waves-effect waves-light">
+
+      <!-- <div id='video_picker' (click)="chooseSourceVideo()">
+        <div class="btn">
           <span>Choose video</span>
         </div>
         <div class="file-path-wrapper">
@@ -11,21 +12,30 @@
           class="file-path validate"
           readonly>
         </div>
+      </div> -->
+
+      <div class="file-upload">
+          <div class="file-select">
+            <div class="file-select-button" id="fileName">Choose Video</div>
+            <div class="file-select-name" id="noFile">No video chosen...</div> 
+            <input type="file" name="chooseFile" id="chooseFile">
+          </div>
       </div>
-      <button class="waves-effect waves-light btn"
-      (click)="toggleBroadcast()">
-      {{ broadcasting ? 'End' : 'Begin' }} broadcast
+
+      <button class="btn" (click)="toggleBroadcast()" style="margin-left: 10vw;">
+        {{ broadcasting ? 'End' : 'Begin' }} broadcast
       </button>
-      </div>
-      <div id='preview_container'>
-        <canvas id='stream_preview'></canvas>
-      </div>
-      <div id='video_container'>
-        <video controls id='video_player'>
-          <source src="movie.mp4" type="video/mp4">
-          <source src="movie.ogg" type="video/ogg">
-        </video>
-      </div>
+    </div>
+
+    <div id='preview_container'>
+      <canvas id='stream_preview'></canvas>
+    </div>
+    <div id='video_container'>
+      <video controls id='video_player'>
+        <source src="movie.mp4" type="video/mp4">
+        <source src="movie.ogg" type="video/ogg">
+      </video>
+    </div>
   </div>
 
   <div id='users_container'>
