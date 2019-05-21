@@ -7,7 +7,7 @@ import * as socketIo from 'socket.io-client';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Disertatie';
+  title = 'Streaming Service';
 
   ngOnInit() {
     const socket = socketIo('http://localhost:3000'); //port of node server
