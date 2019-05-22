@@ -8,10 +8,13 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./active-users.component.css']
 })
 export class ActiveUsersComponent implements OnInit {
-  private users: User[];
+  private users: User[] = [];
   constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.userService.getAllUsers().forEach((value: User, key:string) => {
+      this.users.push(value);
+    });
   }
 
 }
