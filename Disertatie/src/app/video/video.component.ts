@@ -8,14 +8,14 @@ declare var $: any;
   styleUrls: ['./video.component.css']
 })
 export class VideoComponent implements OnInit {
-
+  private broadcasting = false; //this will be set to true when I start to broadcast
   constructor() { }
 
   ngOnInit() {
     this.getChosenFileName();
   }
 
-  private getChosenFileName() {
+  private getChosenFileName() { //https://codepen.io/sazzad/pen/antDJ
     $('#chooseFile').bind('change', function () {
       var filename = $("#chooseFile").val();
       if (/^\s*$/.test(filename)) {
@@ -27,6 +27,10 @@ export class VideoComponent implements OnInit {
         $("#noFile").text(filename.replace("C:\\fakepath\\", "")); 
       }
     });
+  }
+
+  private toggleBroadcast() {
+    this.broadcasting = !this.broadcasting;
   }
 
 }

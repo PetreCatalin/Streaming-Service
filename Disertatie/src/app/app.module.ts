@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { UserService } from './services/user.service';
 import { LoginComponent } from './login/login.component';
 import { VideoComponent } from './video/video.component';
+import { ActiveUsersComponent } from './active-users/active-users.component';
 
 @NgModule({
    declarations: [
       AppComponent,
       LoginComponent,
-      VideoComponent
+      VideoComponent,
+      ActiveUsersComponent
    ],
    imports: [
       BrowserModule,
