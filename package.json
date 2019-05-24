@@ -19,6 +19,7 @@
   "homepage": "https://github.com/PetreCatalin/Disertatie#readme",
   "dependencies": {
     "express": "^4.17.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "socket.io-stream": "^0.9.1"
   }
 }

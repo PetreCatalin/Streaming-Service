@@ -14,6 +14,6 @@ export class AppComponent implements OnInit {
 
     socket.on('hello', (data) => {  //listen to an event from server
       console.log('data from server', data);
-    }) 
+    }); 
   }
 }
