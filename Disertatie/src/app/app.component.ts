@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as socketIo from 'socket.io-client';
+import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +7,14 @@ import * as socketIo from 'socket.io-client';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Streaming Service';
+  private title = 'Streaming Service';
+  private socket: any;
+  constructor(private socketService: SocketService) {
+    this.socket = this.socketService.getSocket();
+  }
 
   ngOnInit() {
-    const socket = socketIo('http://localhost:3000'); //port of node server
-
-    socket.on('hello', (data) => {  //listen to an event from server
+    this.socket.on('hello', (data) => {  //listen to an event from server
       console.log('data from server', data);
     }); 
   }

@@ -16,7 +16,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.warn('user disconnected');
     });
-    socket.emit('hello', {  //emit events to the client
-        greeting: 'Hello Catalin'
-    }); 
+    socket.on('newUser', (newUser) => {
+        console.warn(newUser);
+    });
 });
