@@ -3,7 +3,6 @@ const http = require('http');
 const socketIo = require('socket.io');
 
 const app = express();
-
 app.get('/', (req, res) => res.send('Hello World')); //send this to browser
 
 const server = http.Server(app);
