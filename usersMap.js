@@ -1,7 +1,7 @@
 export default class UsersMap {
 
-    constructor() {
-		this.usersMap = new Map();
+  constructor() {
+		this.usersMap = new Map(); //Map<userId,user>
 	}
 
 	add(user) {

@@ -31,6 +31,10 @@ export class LoginComponent implements OnInit {
           //add to service
           this.socket.emit('newUser', {name: nameInput.value, uuid: UUID.UUID()});
           this.userService.createUserFromSocket(nameInput.value, 0); //replace 0 with the socket
+
+          this.socket.emit('getUsers', (users:any) => {
+            console.warn('users', users);
+          });
           
           this.router.navigate(['/video']);
         }
