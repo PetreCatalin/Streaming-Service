@@ -18,7 +18,8 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.warn('user disconnected');
     });
-    socket.on('newUser', (newUser) => {
-        console.warn(newUser);
+    socket.on('newUser', (newUser) => { //also send the uuid from client
+        console.warn(newUser.name);
+        console.warn(newUser.uuid);
     });
 });

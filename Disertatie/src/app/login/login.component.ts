@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { SocketService } from '../services/socket.service';
+import { UUID } from "angular2-uuid";
 
 @Component({
   selector: 'login',
@@ -28,7 +29,7 @@ export class LoginComponent implements OnInit {
 
         if (nameInput.value.length>=3) {
           //add to service
-          this.socket.emit('newUser',nameInput.value);
+          this.socket.emit('newUser', {name: nameInput.value, uuid: UUID.UUID()});
           this.userService.createUserFromSocket(nameInput.value, 0); //replace 0 with the socket
           
           this.router.navigate(['/video']);

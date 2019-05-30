@@ -1,9 +1,7 @@
-import uuidV4 from 'uuid/v4';
-
 export default class User {
 
-	constructor(name, socket) {
-		this.id = uuidV4();
+	constructor(name, uuid, socket) {
+		this.id = uuid;
 		this.name = name;
 		this.socket = socket;
 	}
