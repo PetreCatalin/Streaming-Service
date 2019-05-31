@@ -33,5 +33,9 @@ io.on('connection', (socket) => {
         fn(usersMap);
     });
 
+    socket.on('getCurrentUser', (fn) => { //get the current user
+        fn(currentSocketUser);
+    })
+
 });
 
