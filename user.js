@@ -1,15 +1,16 @@
 export default class User {
 
-	constructor(name, uuid, socket) {
+	constructor(name, uuid, socketId) {
 		this.id = uuid;
 		this.name = name;
-		this.socket = socket;
+		this.socketId = socketId;
 	}
 
 	toJSON() {
 		return {
 			id: this.id,
-			name: this.name
+			name: this.name,
+			socketId: this.socketId
 		}
 	}
 }

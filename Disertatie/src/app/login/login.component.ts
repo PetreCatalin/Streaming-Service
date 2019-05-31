@@ -10,7 +10,8 @@ import { UUID } from "angular2-uuid";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private socket;
+  private socket:any;
+
   constructor(private router: Router, private userService: UserService, private socketService: SocketService) {
     this.loadEnterBinding();
     this.socket = this.socketService.getSocket();
@@ -28,13 +29,8 @@ export class LoginComponent implements OnInit {
         let nameInput = <HTMLInputElement>document.getElementById('nameInput');
 
         if (nameInput.value.length>=3) {
-          //add to service
           this.socket.emit('newUser', {name: nameInput.value, uuid: UUID.UUID()});
-          this.userService.createUserFromSocket(nameInput.value, 0); //replace 0 with the socket
-
-          this.socket.emit('getUsers', (users:any) => {
-            console.warn('users', users);
-          });
+          //this.userService.createUserFromSocket(nameInput.value, 0); //replace 0 with the socket
           
           this.router.navigate(['/video']);
         }

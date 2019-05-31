@@ -3,12 +3,12 @@ import { UUID } from 'angular2-uuid';
 export class User {
     id: string;
     name: string;
-    socket: any;
+    socketId: any;
 
-    constructor(name: string, socket: any) {
+    constructor(name: string, socketId: any) {
 			this.id = UUID.UUID();
 			this.name = name;
-			this.socket = socket;
+			this.socketId = socketId;
 		}
 
 	toJSON() {

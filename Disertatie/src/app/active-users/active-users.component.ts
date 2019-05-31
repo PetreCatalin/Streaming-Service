@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../core/user';
-import { UserService } from '../services/user.service';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'active-users',
@@ -9,12 +9,18 @@ import { UserService } from '../services/user.service';
 })
 export class ActiveUsersComponent implements OnInit {
   private users: User[] = [];
-  constructor(private userService: UserService) { }
+  private socket:any;
+  constructor(private socketService: SocketService) {
+    this.socket = this.socketService.getSocket();
+  }
 
   ngOnInit() {
-    this.userService.getAllUsers().forEach((value: User, key:string) => {
-      this.users.push(value);
-    });
+    setInterval(() => { //refresh the list of users coming from server
+      this.socket.emit('getUsers', (users:any) => {
+        this.users = users;
+        console.warn('users', this.users); //user.socketId is the id of socket created on server for the current user
+      });
+    }, 500);
   }
 
 }
