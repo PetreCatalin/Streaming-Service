@@ -2,18 +2,6 @@
   <div id='content_container'>
     <div id='controls_container' class='grey lighten-3 z-depth-1'>
 
-      <!-- <div id='video_picker' (click)="chooseSourceVideo()">
-        <div class="btn">
-          <span>Choose video</span>
-        </div>
-        <div class="file-path-wrapper">
-          <input placeholder="No video is selected"
-          id="video_path" type="text"
-          class="file-path validate"
-          readonly>
-        </div>
-      </div> -->
-
       <div class="file-upload">
           <div class="file-select">
             <div class="file-select-button" id="fileName">Choose Video</div>
@@ -34,14 +22,13 @@
     <h3 style="text-align: center;"> {{broadcastingMessage}} </h3> 
     <br>
     <div id='video_container'>
-      <video controls id='video_player'>
-        <source src="movie.mp4" type="video/mp4">
-        <source src="movie.ogg" type="video/ogg">
+      <video controls autoplay id='video_player'>
+        <source src="videoplayback.mp4" type="video/mp4">
       </video>
     </div>
   </div>
 
   <div id='users_container'>
-    <active-users></active-users>
+    <active-users (userSelected)="userSelected($event)"></active-users>
   </div>
 </div>

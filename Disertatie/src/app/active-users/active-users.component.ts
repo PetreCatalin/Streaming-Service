@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { User } from '../core/user';
 import { SocketService } from '../services/socket.service';
 
@@ -12,6 +12,7 @@ export class ActiveUsersComponent implements OnInit {
   private socket:any;
   private currentUser: User;
   private allUsers: User[] = [];
+  @Output() userSelected: EventEmitter<string> =   new EventEmitter();
 
   constructor(private socketService: SocketService) {
     this.socket = this.socketService.getSocket();
@@ -46,7 +47,7 @@ export class ActiveUsersComponent implements OnInit {
     let correspondingH3 = (<HTMLDivElement>document.getElementById(userName));
     correspondingH3.style.backgroundColor = '#8BFC02'; //mark div with green so it receive broadcast stream from that user
 
-
+    this.userSelected.emit(userName); //emit to the parent component (video)
     //change the broadcastingMessage string from video component to 'You are currently watching a video streamed by ' + userName
   }
 }
