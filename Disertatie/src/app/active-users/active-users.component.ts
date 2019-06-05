@@ -38,7 +38,7 @@ export class ActiveUsersComponent implements OnInit {
     }, 500);
   }
 
-  private hoverUser(userName: string) { 
+  private hoverUser(userName: string, userId: string) { 
     //make all divs white (clear previous green div/ selected user)
     let userDivs = document.getElementsByClassName('userNames') as HTMLCollectionOf<HTMLDivElement>;;
     for (let i=0;i<userDivs.length; ++i) {
@@ -49,5 +49,8 @@ export class ActiveUsersComponent implements OnInit {
 
     this.userSelected.emit(userName); //emit to the parent component (video)
     //change the broadcastingMessage string from video component to 'You are currently watching a video streamed by ' + userName
+
+    //here we need to request stream from the selected user
+    this.socketService.requestStream(userId);
   }
 }

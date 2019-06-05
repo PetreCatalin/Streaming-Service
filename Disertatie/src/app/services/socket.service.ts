@@ -9,4 +9,16 @@ export class SocketService {
   public getSocket(): any {
     return this.socket;
   }
+
+  public onStreamReceived(callback: any): any { //cand primeste streamul
+    return this.socket.on('stream', callback);
+  }
+
+  public requestStream(userId: string): any { //face un request pentru a primi stream-ul (se executa cand selectezi un user din lista)
+    return this.socket.emit('user_stream', userId);
+  }
+
+  public sendStream(data: any): any {
+    return this.socket.emit('stream', data); //emite streamul catre ceilalti utilizatori
+  }
 }
