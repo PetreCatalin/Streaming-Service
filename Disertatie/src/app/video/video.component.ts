@@ -39,7 +39,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private getChosenFileName() { //https://codepen.io/sazzad/pen/antDJ 
-    $('#chooseFile').bind('change', function () {
+    $('#chooseFile').bind('change', function (event:any) {
       this.fileName = $("#chooseFile").val(); //http://jsfiddle.net/dsbonev/cCCZ2/?utm_source=website&utm_medium=embed&utm_campaign=cCCZ2 -- this is to run video in browser
       console.warn('filename', this.fileName);
       if (/^\s*$/.test(this.fileName)) {
@@ -50,7 +50,15 @@ export class VideoComponent implements OnInit, AfterViewInit {
         $(".file-upload").addClass('active');
         $("#noFile").text(this.fileName.replace("C:\\fakepath\\", "")); 
       }
+
+    let file= this.files[0]; //this is the selected file
+    //let type = file.type;
+    var videoNode = document.querySelector('video');
+
+    var fileURL = URL.createObjectURL(file);
+    videoNode.src = fileURL;
     });
+
   }
 
   private userSelected(userName: string) {
