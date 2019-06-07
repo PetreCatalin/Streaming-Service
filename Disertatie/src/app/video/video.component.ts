@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ElementRenderer } from '../utils/ElementRenderer';
 import { SocketService } from '../services/socket.service';
 
 declare var $: any;
