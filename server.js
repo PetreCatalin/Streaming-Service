@@ -1,5 +1,6 @@
 import UsersMap from './usersMap';
 import User from './user';
+import ElementRenderer from './ElementRenderer';
 
 //https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
 
@@ -35,7 +36,12 @@ io.on('connection', (socket) => {
 
     socket.on('getCurrentUser', (fn) => { //get the current user
         fn(currentSocketUser);
-    })
+    });
+
+    socket.on('createElementRenderer', (fn) => {
+        var renderer = new ElementRenderer({ width: 320, height: 240 }); //this is working on the server!!!!
+        console.log(renderer.width);
+    });
 
 });
 

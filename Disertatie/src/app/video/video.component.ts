@@ -17,10 +17,12 @@ export class VideoComponent implements OnInit, AfterViewInit {
   private videoPlayer: any;
   private streamPreview: any;
   private streamContext: any;
+  private socket: any;
 
   //this may change to 'You are currently broadcasting a video' or 'You are currently watching a video streamed by Userxxx'
   //this must be changed when clicking on a user in active-users component
   constructor(private socketService: SocketService) {
+    this.socket = this.socketService.getSocket();
     this.socketService.onStreamReceived((data:any) => { //cand se primeste streamul
       return this.onStreamReceived(data);
     })
@@ -34,7 +36,10 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.videoPlayer = document.getElementById('video_player');
     this.streamPreview = document.getElementById('stream_preview');
     this.streamContext = this.streamPreview.getContext('2d');
-    //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values    !!! need to look how I insantiate an element renderer
+    //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values
+    this.socket.emit('createElementRenderer', (data:any) => {
+      console.log('data', data);
+    })
   }
 
   private getChosenFileName() { //https://codepen.io/sazzad/pen/antDJ 
