@@ -36,6 +36,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.videoPlayer = document.getElementById('video_player');
     this.streamPreview = document.getElementById('stream_preview');
     this.streamContext = this.streamPreview.getContext('2d');
+
     //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values
     this.socket.emit('createElementRenderer', (data:any) => {
       console.log('data', data);
@@ -87,9 +88,10 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private sendSnapshot() { //begin to start streaming to other users
-    this.renderer.getEncryptedDataURL(this.videoPlayer, (data: any) => {
-      this.socketService.sendStream(data);
-    });
+    // this.renderer.getEncryptedDataURL(this.videoPlayer, (data: any) => {
+    //   this.socketService.sendStream(data);
+    // });
+    this.socket.emit('getEncryptedDataUrl',this.videoPlayer);
   }
 
   private onStreamReceived(data: any) { //cand se primeste streamul de la alti utilizatori

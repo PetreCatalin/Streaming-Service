@@ -19,6 +19,7 @@ var usersMap = new UsersMap();
 io.on('connection', (socket) => {
     console.warn('user connected');
     var currentSocketUser = new User(); //we need a way to store the current user
+    var renderer;
 
     socket.on('disconnect', () => {
         console.warn('user disconnected');
@@ -39,9 +40,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createElementRenderer', (fn) => {
-        var renderer = new ElementRenderer({ width: 320, height: 240 }); //this is working on the server!!!!
+        renderer = new ElementRenderer({ width: 320, height: 240 }); //this is working on the server!!!!
         console.log(renderer.width);
     });
+
+    socket.on('getEncryptedDataUrl', (videoPlayer) => {
+        console.log('videoPlayer', videoPlayer);
+    })
 
 });
 
