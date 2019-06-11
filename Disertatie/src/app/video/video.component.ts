@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
+import { ElementRenderer } from '../utils/ElementRenderer';
 
 declare var $: any;
 
@@ -88,14 +89,14 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private sendSnapshot() { //begin to start streaming to other users
-    // this.renderer.getEncryptedDataURL(this.videoPlayer, (data: any) => {
-    //   this.socketService.sendStream(data);
-    // });
+    this.renderer.getEncryptedDataURL(this.videoPlayer, (data: any) => {
+      this.socketService.sendStream(data);
+    });
     this.socket.emit('getEncryptedDataUrl',this.videoPlayer);
   }
 
   private onStreamReceived(data: any) { //cand se primeste streamul de la alti utilizatori
-    this.renderer.decryptDataURLInCanvas(data, this.streamPreview);
+    //this.renderer.decryptDataURLInCanvas(data, this.streamPreview);
   }
 
 }

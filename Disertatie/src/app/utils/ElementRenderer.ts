@@ -13,9 +13,9 @@ export class ElementRenderer {
         this.height = options.height;
         this.format = options.format || 'image/png';
     
-        this.cipher = new PwlcmSpicCipher3();
-        this.cipher.initKey({ x1: 0.1567, y1: 0.3219, r1: 0.2, m1: 2015,
-                     x2: 0.4567, y2: 0.1111, r2: 0.3, m2: 2016, iv: 123456 });
+        // this.cipher = new PwlcmSpicCipher3();
+        // this.cipher.initKey({ x1: 0.1567, y1: 0.3219, r1: 0.2, m1: 2015,
+        //              x2: 0.4567, y2: 0.1111, r2: 0.3, m2: 2016, iv: 123456 });
       }
 
     public createCanvas(width = this.width, height = this.height) {
