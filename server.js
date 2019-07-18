@@ -51,13 +51,13 @@ io.on('connection', (socket) => {
         console.log('videoPlayer', videoPlayer);
     });
 
-    socket.on('sendDataToBeEncrypted', (imgData) => {
-        //console.log(imgData); ajunge bine
-        var pixelsToBeEncrypted = toRgbUint8ClampedArray(imgData); //need to make this conversion on the server
-        console.log(pixelsToBeEncrypted);
-        var rgbEncrypted = cipher.encrypt(pixelsToBeEncrypted);
-        console.log(rgbEncrypted.length); //asta trebuie trimis catre decriptare
-        console.log('encrypted');
+    socket.on('sendDataToBeEncrypted', (rgbPixels) => {
+        var rgbPixelsClampedArray = new Uint8ClampedArray(60000); //200*100*3 we need to create a new array of type Uint8ClampedArray
+        for (let i = 0; i<60000;++i)
+            rgbPixelsClampedArray[i] = rgbPixels[i];
+        var rgbEncrypted = cipher.encrypt(rgbPixelsClampedArray); //obtinem cele 60000 de valori ale pixelilor criptate
+        console.log(rgbEncrypted); //asta trebuie trimis catre decriptare
+        console.log('encrypted done');
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori

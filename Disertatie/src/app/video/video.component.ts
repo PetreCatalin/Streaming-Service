@@ -1,7 +1,5 @@
-import { base64js } from 'base64-js';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
-import { ElementRenderer } from '../utils/ElementRenderer';
 import { RgbUtils } from '../utils/RgbUtils';
 
 declare var $: any;
@@ -106,21 +104,16 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private getEncryptedDataURL(element:any, callback:any) {
     console.time('Encryption Process'); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
-
     const canvas = this.createAndDrawInCanvas(element);
     const imgData = this.getImageData(canvas.getContext('2d'));
     const rgbPixels: Uint8ClampedArray = RgbUtils.toRgbUint8ClampedArray(imgData.data); //fac to rgb pentru cripare, voi face mai tarziu to rgba pentru decriptate
     console.warn('imgData.data', imgData.data); //80000
-    console.warn('rgbPixelsUint8ClampedArray', rgbPixels); //60000 (se elimina ultimul filtru)
-
-    //const rgbEncrypted = this.cipher.encrypt(rgbPixels); //aici trimit pixelii deja criptati, va trebui modificat sa trimit pixelii si sa ii criptez pe server
-    //dupa care voi primi de la server pixelii deja decriptati
+    console.warn('rgbPixelsUint8ClampedArray', rgbPixels); // (200*100*4)80000 => (200*100*3)60000 (se elimina ultimul filtru)
 
     //var b64encoded = btoa(unescape(encodeURIComponent(rgbPixels.toString())));
     //callback(b64encoded); //acest parametru va fi data in base64 de trimis catre ceilalti utilizatori
 
-    this.socket.emit('sendDataToBeEncrypted', imgData.data); //trimit pixelii care vor fi criptati pe server
-
+    this.socket.emit('sendDataToBeEncrypted', rgbPixels); //trimit pixelii care vor fi criptati pe server
     console.timeEnd('Encryption Process');
   }
 
