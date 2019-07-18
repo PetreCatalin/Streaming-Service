@@ -1,6 +1,8 @@
+import { base64js } from 'base64-js';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 import { ElementRenderer } from '../utils/ElementRenderer';
+import { RgbUtils } from '../utils/RgbUtils';
 
 declare var $: any;
 
@@ -19,6 +21,8 @@ export class VideoComponent implements OnInit, AfterViewInit {
   private streamPreview: any;
   private streamContext: any;
   private socket: any;
+  private width: number = 200; //dimensiunile canvasului pentru preview(look in css - 400/200 normally  --400*200*3 pixels values)
+  private height: number = 100;
 
   //this may change to 'You are currently broadcasting a video' or 'You are currently watching a video streamed by Userxxx'
   //this must be changed when clicking on a user in active-users component
@@ -41,7 +45,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values
     this.socket.emit('createElementRenderer', (data:any) => {
       console.log('data', data);
-    })
+    });
   }
 
   private getChosenFileName() { //https://codepen.io/sazzad/pen/antDJ 
@@ -80,7 +84,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private startBroadcasting() {
     this.broadcastingMessage = 'You are currently broadcasting a video';
-    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 100); //send data every 100 miliseconds
+    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 3000); //send data every 100 miliseconds normally, change for testing
   }
 
   private endBroadcasting() {
@@ -89,14 +93,51 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private sendSnapshot() { //begin to start streaming to other users
-    this.renderer.getEncryptedDataURL(this.videoPlayer, (data: any) => {
-      this.socketService.sendStream(data);
+    this.getEncryptedDataURL(this.videoPlayer, (data: any) => {
+      console.warn('data', data);
+      this.socketService.sendStream(data); //trimit textul catre ceilalti utilizatori
     });
-    this.socket.emit('getEncryptedDataUrl',this.videoPlayer);
+    this.socket.emit('getEncryptedDataUrl',this.videoPlayer); //emit this to the server and do all things done here on client on the server
   }
 
   private onStreamReceived(data: any) { //cand se primeste streamul de la alti utilizatori
     //this.renderer.decryptDataURLInCanvas(data, this.streamPreview);
   }
 
+  private getEncryptedDataURL(element:any, callback:any) {
+    console.time('Encryption Process'); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
+
+    const canvas = this.createAndDrawInCanvas(element);
+    const imgData = this.getImageData(canvas.getContext('2d'));
+    const rgbPixels: Uint8ClampedArray = RgbUtils.toRgbUint8ClampedArray(imgData.data); //fac to rgb pentru cripare, voi face mai tarziu to rgba pentru decriptate
+    console.warn('imgData.data', imgData.data); //80000
+    console.warn('rgbPixelsUint8ClampedArray', rgbPixels); //60000 (se elimina ultimul filtru)
+
+    //const rgbEncrypted = this.cipher.encrypt(rgbPixels); //aici trimit pixelii deja criptati, va trebui modificat sa trimit pixelii si sa ii criptez pe server
+    //dupa care voi primi de la server pixelii deja decriptati
+
+    //var b64encoded = btoa(unescape(encodeURIComponent(rgbPixels.toString())));
+    //callback(b64encoded); //acest parametru va fi data in base64 de trimis catre ceilalti utilizatori
+
+    this.socket.emit('sendDataToBeEncrypted', imgData.data); //trimit pixelii care vor fi criptati pe server
+
+    console.timeEnd('Encryption Process');
+  }
+
+  private createAndDrawInCanvas(element: any) {
+    const canvas = this.createCanvas(this.width, this.height); //width si height de aici //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values
+    const context = canvas.getContext('2d');
+    context.drawImage(element, 0, 0, this.width, this.height);
+    return canvas;
+  }
+
+  private createCanvas(width = this.width, height = this.height) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width, canvas.height = height;
+    return canvas;
+  }
+
+  private getImageData(context: any) {
+    return context.getImageData(0, 0, this.width, this.height);
+  }
 }

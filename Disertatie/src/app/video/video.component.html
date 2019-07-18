@@ -14,11 +14,7 @@
         {{ broadcasting ? 'End' : 'Begin' }} broadcast
       </button>
     </div>
-
-    <div id='preview_container'>  <!-- this is for the decrypted data to be render in here -->
-      <canvas id='stream_preview'></canvas>
-    </div>
-    
+  
     <br>
     <h3 style="text-align: center;"> {{broadcastingMessage}} </h3> 
     <br>
@@ -27,6 +23,11 @@
         <source src="videoplayback.mp4" type="video/mp4">
       </video>
     </div>
+
+    <div id='preview_container'>  <!-- this is for the decrypted data to be render in here -->
+      <canvas id='stream_preview'></canvas>
+    </div>
+
   </div>
 
   <div id='users_container'>

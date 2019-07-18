@@ -1,6 +1,7 @@
 import UsersMap from './usersMap';
 import User from './user';
 import ElementRenderer from './ElementRenderer';
+import { toRgbUint8ClampedArray } from './ArrayUtils';
 
 //https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
 
@@ -20,6 +21,7 @@ io.on('connection', (socket) => {
     console.warn('user connected');
     var currentSocketUser = new User(); //we need a way to store the current user
     var renderer;
+    var cipher;
 
     socket.on('disconnect', () => {
         console.warn('user disconnected');
@@ -40,12 +42,26 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createElementRenderer', (fn) => {
-        renderer = new ElementRenderer({ width: 320, height: 240 }); //this is working on the server!!!!
-        console.log(renderer.width);
+        renderer = new ElementRenderer({ width: 200, height: 100 }); //size of the preview canvas (look in video component lines 24,25) and in css
+        //console.log(renderer.cipher);
+        cipher = renderer.cipher;
     });
 
     socket.on('getEncryptedDataUrl', (videoPlayer) => {
         console.log('videoPlayer', videoPlayer);
+    });
+
+    socket.on('sendDataToBeEncrypted', (imgData) => {
+        //console.log(imgData); ajunge bine
+        var pixelsToBeEncrypted = toRgbUint8ClampedArray(imgData); //need to make this conversion on the server
+        console.log(pixelsToBeEncrypted);
+        var rgbEncrypted = cipher.encrypt(pixelsToBeEncrypted);
+        console.log(rgbEncrypted.length); //asta trebuie trimis catre decriptare
+        console.log('encrypted');
+    });
+
+    socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori
+        console.log('stream', streamBase64);
     })
 
 });

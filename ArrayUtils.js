@@ -1,6 +1,7 @@
 // Converts from rgba Uint8ClampedArray to an rgb one.
 export function toRgbUint8ClampedArray(pixels) {
-    const imageSize  = Math.floor(pixels.length / 4)
+    const imageSize  = Math.floor(pixels.length / 4) //problem is that pixels don't have length
+    console.log('imageSize', imageSize);
     const outputPixels = new Uint8ClampedArray(imageSize * 3)
     for (let idx = 0; idx < imageSize; idx++) {
       for (let chan = 0; chan < 3; chan++) {
