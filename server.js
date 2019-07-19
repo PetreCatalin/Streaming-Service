@@ -1,7 +1,6 @@
 import UsersMap from './usersMap';
 import User from './user';
 import ElementRenderer from './ElementRenderer';
-import { toRgbUint8ClampedArray } from './ArrayUtils';
 
 //https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
 
@@ -48,16 +47,22 @@ io.on('connection', (socket) => {
     });
 
     socket.on('getEncryptedDataUrl', (videoPlayer) => {
-        console.log('videoPlayer', videoPlayer);
+        //console.log('videoPlayer', videoPlayer);
     });
 
     socket.on('sendDataToBeEncrypted', (rgbPixels) => {
-        var rgbPixelsClampedArray = new Uint8ClampedArray(60000); //200*100*3 we need to create a new array of type Uint8ClampedArray
-        for (let i = 0; i<60000;++i)
+        let arraySize = 60000; //200*100*3 we need to create a new array of type Uint8ClampedArray
+        var rgbPixelsClampedArray = new Uint8ClampedArray(arraySize); //we need to create a new array of type Uint8ClampedArray
+        for (let i = 0; i<arraySize;++i)
             rgbPixelsClampedArray[i] = rgbPixels[i];
         var rgbEncrypted = cipher.encrypt(rgbPixelsClampedArray); //obtinem cele 60000 de valori ale pixelilor criptate
-        console.log(rgbEncrypted); //asta trebuie trimis catre decriptare
+        //console.log(rgbEncrypted);
         console.log('encrypted done');
+        var rgbDecrypted = cipher.decrypt(rgbEncrypted);
+        //console.log(rgbDecrypted);
+        console.log('decryption done');
+
+        socket.emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted trebuie trimis catre client si pus in canvas preview ca rgbaDecrypted
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori

@@ -33,14 +33,13 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getChosenFileName();
+    this.getDecryptedDataFromServer();
   }
 
   ngAfterViewInit() {
     this.videoPlayer = document.getElementById('video_player');
     this.streamPreview = document.getElementById('stream_preview');
     this.streamContext = this.streamPreview.getContext('2d');
-
-    //this.renderer = new ElementRenderer({ width: 320, height: 240 });  //change those values
     this.socket.emit('createElementRenderer', (data:any) => {
       console.log('data', data);
     });
@@ -82,7 +81,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private startBroadcasting() {
     this.broadcastingMessage = 'You are currently broadcasting a video';
-    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 3000); //send data every 100 miliseconds normally, change for testing
+    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 1000); //send data every 100 miliseconds normally, change for testing
   }
 
   private endBroadcasting() {
@@ -107,8 +106,8 @@ export class VideoComponent implements OnInit, AfterViewInit {
     const canvas = this.createAndDrawInCanvas(element);
     const imgData = this.getImageData(canvas.getContext('2d'));
     const rgbPixels: Uint8ClampedArray = RgbUtils.toRgbUint8ClampedArray(imgData.data); //fac to rgb pentru cripare, voi face mai tarziu to rgba pentru decriptate
-    console.warn('imgData.data', imgData.data); //80000
-    console.warn('rgbPixelsUint8ClampedArray', rgbPixels); // (200*100*4)80000 => (200*100*3)60000 (se elimina ultimul filtru)
+    //console.warn('imgData.data', imgData.data); //80000
+    console.warn('rgbPixelsSentToEnctyption', rgbPixels); // (200*100*4)80000 => (200*100*3)60000 (se elimina ultimul filtru)
 
     //var b64encoded = btoa(unescape(encodeURIComponent(rgbPixels.toString())));
     //callback(b64encoded); //acest parametru va fi data in base64 de trimis catre ceilalti utilizatori
@@ -133,4 +132,17 @@ export class VideoComponent implements OnInit, AfterViewInit {
   private getImageData(context: any) {
     return context.getImageData(0, 0, this.width, this.height);
   }
+
+  private getDecryptedDataFromServer() {
+    this.socket.on('sendDectyptedDataToClient', (rgbDecrypted) => {
+      console.warn('rgbPixelsDecryptedFromServer', rgbDecrypted); //(200*100*3) 60000
+      let rgbPixels = []; let size = 60000;
+      for (let i=0;i<size;++i) {
+        rgbPixels.push(rgbDecrypted[i])
+      }
+      let rgbaDecrypted = RgbUtils.toRgbaUint8ClampedArray(rgbPixels); //(200*100*4) 80000
+      console.warn('rgbaPixelsDecrypted', rgbaDecrypted);
+    });
+  }
+  
 }
