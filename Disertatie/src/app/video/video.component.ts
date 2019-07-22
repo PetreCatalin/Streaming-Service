@@ -19,8 +19,8 @@ export class VideoComponent implements OnInit, AfterViewInit {
   private streamPreview: any;
   private streamContext: any;
   private socket: any;
-  private width: number = 200; //dimensiunile canvasului pentru preview(look in css - 400/200 normally  --400*200*3 pixels values)
-  private height: number = 100;
+  private width: number = 300; //dimensiunile canvasului pentru preview(look in css - 400/200 normally  --400*200*3 pixels values)
+  private height: number = 175;
 
   //this may change to 'You are currently broadcasting a video' or 'You are currently watching a video streamed by Userxxx'
   //this must be changed when clicking on a user in active-users component
@@ -81,7 +81,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private startBroadcasting() {
     this.broadcastingMessage = 'You are currently broadcasting a video';
-    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 1000); //send data every 100 miliseconds normally, change for testing
+    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 400); //send data every 100 miliseconds normally, change for testing
   }
 
   private endBroadcasting() {
@@ -135,14 +135,30 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private getDecryptedDataFromServer() {
     this.socket.on('sendDectyptedDataToClient', (rgbDecrypted) => {
-      console.warn('rgbPixelsDecryptedFromServer', rgbDecrypted); //(200*100*3) 60000
-      let rgbPixels = []; let size = 60000;
+      //console.warn('rgbPixelsDecryptedFromServer', rgbDecrypted); //(200*100*3) 60000
+      let rgbPixels = []; let size = this.width * this.height * 3;
       for (let i=0;i<size;++i) {
         rgbPixels.push(rgbDecrypted[i])
       }
       let rgbaDecrypted = RgbUtils.toRgbaUint8ClampedArray(rgbPixels); //(200*100*4) 80000
       console.warn('rgbaPixelsDecrypted', rgbaDecrypted);
+
+      this.addDecryptedPixelsToPreviewCanvas(rgbaDecrypted);
     });
+  }
+
+  private addDecryptedPixelsToPreviewCanvas(rgbaDecrypted: Uint8ClampedArray): void {
+    const decriptedCanvas = this.createCanvas();
+    const decriptedContext = decriptedCanvas.getContext('2d');
+    const decriptedImageData = this.getImageData(decriptedContext);
+
+    decriptedImageData.data.set(rgbaDecrypted);
+    decriptedContext.putImageData(decriptedImageData, 0, 0);
+
+    const context = this.streamPreview.getContext('2d');
+    context.drawImage(decriptedCanvas, 0, 0, this.width, this.height);
+
+    console.warn('pixels added to canvas');
   }
   
 }

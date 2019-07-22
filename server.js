@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createElementRenderer', (fn) => {
-        renderer = new ElementRenderer({ width: 200, height: 100 }); //size of the preview canvas (look in video component lines 24,25) and in css
+        renderer = new ElementRenderer({ width: 300, height: 175 }); //size of the preview canvas (look in video component lines 24,25) and in css
         //console.log(renderer.cipher);
         cipher = renderer.cipher;
     });
@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendDataToBeEncrypted', (rgbPixels) => {
-        let arraySize = 60000; //200*100*3 we need to create a new array of type Uint8ClampedArray
+        let arraySize = renderer.width * renderer.height * 3; //200*100*3 we need to create a new array of type Uint8ClampedArray
         var rgbPixelsClampedArray = new Uint8ClampedArray(arraySize); //we need to create a new array of type Uint8ClampedArray
         for (let i = 0; i<arraySize;++i)
             rgbPixelsClampedArray[i] = rgbPixels[i];
