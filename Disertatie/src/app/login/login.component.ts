@@ -30,8 +30,6 @@ export class LoginComponent implements OnInit {
 
         if (nameInput.value.length>=3) {
           this.socket.emit('newUser', {name: nameInput.value, uuid: UUID.UUID()});
-          //this.userService.createUserFromSocket(nameInput.value, 0); //replace 0 with the socket
-          
           this.router.navigate(['/video']);
         }
       }

@@ -12,7 +12,9 @@ export class ActiveUsersComponent implements OnInit {
   private socket:any;
   private currentUser: User;
   private allUsers: User[] = [];
-  @Output() userSelected: EventEmitter<string> =   new EventEmitter();
+  private hoveredUserName: string; //need to get those from the server
+  private hoveredUserId: any;
+  @Output() userSelected: EventEmitter<string> = new EventEmitter();
 
   constructor(private socketService: SocketService) {
     this.socket = this.socketService.getSocket();
@@ -25,7 +27,7 @@ export class ActiveUsersComponent implements OnInit {
     });
 
     setInterval(() => { //refresh the list of users coming from server
-      this.socket.emit('getUsers', (users:any[]) => {
+      this.socket.emit('getUsers', (users:any[]) => { //here users is usersMap from server
         if (this.allUsers.toString() !== users.toString()) { //refresh users array only if new users are coming or users are leaving
           //this keeps the green hover on selected user until it refreshes
           this.allUsers = users;

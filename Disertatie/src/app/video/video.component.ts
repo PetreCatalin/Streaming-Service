@@ -109,9 +109,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
     //console.warn('imgData.data', imgData.data); //80000
     console.warn('rgbPixelsSentToEnctyption', rgbPixels); // (200*100*4)80000 => (200*100*3)60000 (se elimina ultimul filtru)
 
-    //var b64encoded = btoa(unescape(encodeURIComponent(rgbPixels.toString())));
-    //callback(b64encoded); //acest parametru va fi data in base64 de trimis catre ceilalti utilizatori
-
     this.socket.emit('sendDataToBeEncrypted', rgbPixels); //trimit pixelii care vor fi criptati pe server
     console.timeEnd('Encryption Process');
   }
@@ -157,7 +154,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
     const context = this.streamPreview.getContext('2d');
     context.drawImage(decriptedCanvas, 0, 0, this.width, this.height);
-
     console.warn('pixels added to canvas');
   }
   

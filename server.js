@@ -42,7 +42,6 @@ io.on('connection', (socket) => {
 
     socket.on('createElementRenderer', (fn) => {
         renderer = new ElementRenderer({ width: 300, height: 175 }); //size of the preview canvas (look in video component lines 24,25) and in css
-        //console.log(renderer.cipher);
         cipher = renderer.cipher;
     });
 
