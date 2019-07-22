@@ -2,7 +2,7 @@
 <h3 class='title' style="text-align: center;"> Other users online: </h3>
 <br>
 
-<div *ngFor="let user of users" id="{{user.name}}" class="userNames"  (click)="hoverUser(user.name, user.id)">
+<div *ngFor="let user of users" id="{{user.name}}" class="userNames"  (click)="hoverUser(user.name, user.id, user.socketId)">  <!-- user.socket id e id-ul socketului-->
   <h3>{{ user.name }} </h3>
   <br>
 </div>

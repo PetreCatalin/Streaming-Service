@@ -29,6 +29,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.socketService.onStreamReceived((data:any) => { //cand se primeste streamul
       return this.onStreamReceived(data);
     })
+    console.warn('socketId', this.socket.id);
   }
 
   ngOnInit() {

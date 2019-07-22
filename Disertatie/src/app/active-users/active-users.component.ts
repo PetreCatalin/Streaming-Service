@@ -23,7 +23,7 @@ export class ActiveUsersComponent implements OnInit {
   ngOnInit() {
     this.socket.emit('getCurrentUser', (currentUser: any) => {
       this.currentUser = currentUser;
-      console.warn('current User', currentUser);
+      console.warn('current User', currentUser);  //currentUser.socketId 
     });
 
     setInterval(() => { //refresh the list of users coming from server
@@ -40,7 +40,7 @@ export class ActiveUsersComponent implements OnInit {
     }, 500);
   }
 
-  private hoverUser(userName: string, userId: string) { 
+  private hoverUser(userName: string, userId: string, socketId: any) { 
     //make all divs white (clear previous green div/ selected user)
     let userDivs = document.getElementsByClassName('userNames') as HTMLCollectionOf<HTMLDivElement>;;
     for (let i=0;i<userDivs.length; ++i) {
@@ -51,6 +51,8 @@ export class ActiveUsersComponent implements OnInit {
 
     this.userSelected.emit(userName); //emit to the parent component (video)
     //change the broadcastingMessage string from video component to 'You are currently watching a video streamed by ' + userName
+
+    console.warn('need to connect to room', socketId); //can connect to a room only in server ?? maybe use graph instead of rooms ??
 
     //here we need to request stream from the selected user
     this.socketService.requestStream(userId);

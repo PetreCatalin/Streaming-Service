@@ -61,12 +61,14 @@ io.on('connection', (socket) => {
         //console.log(rgbDecrypted);
         console.log('decryption done');
 
-        socket.emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted trebuie trimis catre client si pus in canvas preview ca rgbaDecrypted
+        //here we need to send data only to this socket room (room with name socketId) or maybe use graph.js
+        io.emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted trebuie trimis catre client si pus in canvas preview ca rgbaDecrypted
+        //here we use IO to send this to all clients (socket.emit - emit to current client, io.emit - emit to all clients)
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori
         console.log('stream', streamBase64);
-    })
+    });
 
 });
 
