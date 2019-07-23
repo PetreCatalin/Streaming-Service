@@ -46,10 +46,6 @@ io.on('connection', (socket) => {
         cipher = renderer.cipher;
     });
 
-    socket.on('getEncryptedDataUrl', (videoPlayer) => {
-        //console.log('videoPlayer', videoPlayer);
-    });
-
     socket.on('sendDataToBeEncrypted', (rgbPixels) => {
         let arraySize = renderer.width * renderer.height * 3; //200*100*3 we need to create a new array of type Uint8ClampedArray
         var rgbPixelsClampedArray = new Uint8ClampedArray(arraySize); //we need to create a new array of type Uint8ClampedArray
@@ -62,9 +58,8 @@ io.on('connection', (socket) => {
         //console.log(rgbDecrypted);
         console.log('decryption done');
 
-        //here we need to send data only to this socket room (room with name socketId) or maybe use graph.js
-        io.emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted trebuie trimis catre client si pus in canvas preview ca rgbaDecrypted
-        //here we use IO to send this to all clients (socket.emit - emit to current client, io.emit - emit to all clients)
+        //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers
+        io.to(socket.id).emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori

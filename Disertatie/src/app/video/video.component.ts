@@ -60,7 +60,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
       }
 
     let file= this.files[0]; //this is the selected file
-    //let type = file.type;
     var videoNode = document.querySelector('video');
 
     var fileURL = URL.createObjectURL(file);
@@ -95,7 +94,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
       console.warn('data', data);
       this.socketService.sendStream(data); //trimit textul catre ceilalti utilizatori
     });
-    this.socket.emit('getEncryptedDataUrl',this.videoPlayer); //emit this to the server and do all things done here on client on the server
   }
 
   private onStreamReceived(data: any) { //cand se primeste streamul de la alti utilizatori
