@@ -25,6 +25,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.warn('user disconnected');
         usersMap.delete(currentSocketUser.id); //delete from the map the user that logout
+        socket.leaveAll();
     });
 
     socket.on('newUser', (newUser) => { //also send the uuid from client

@@ -35,6 +35,13 @@ export class ActiveUsersComponent implements OnInit {
           console.warn('other users', this.users); //user.socketId is the id of socket created on server for the current user
 
           //here hover again the user that i received stream from because at user refresh hover is lost
+
+          if (this.socket.currentUserHovered) {
+            setTimeout(() => {
+            let correspondingH3 = (<HTMLDivElement>document.getElementById(this.socket.currentUserHovered));
+            correspondingH3.style.backgroundColor = '#8BFC02'; //mark div with green so it receive broadcast stream from that user
+            }, 100); //leave this so the users list has time to refresh
+          }
         }
       });
     }, 500);
@@ -56,6 +63,7 @@ export class ActiveUsersComponent implements OnInit {
       this.socket.emit('leaveRoom', this.socket.room); //leave the previous room if one existed
     this.socket.emit('joinRoom', socketId); //can connect to a room only in server, maybe use graph instead of rooms ??
     this.socket.room = socketId;
+    this.socket.currentUserHovered = userName;
 
     //here we need to request stream from the selected user
     this.socketService.requestStream(userId);
