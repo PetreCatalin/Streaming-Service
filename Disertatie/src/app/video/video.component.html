@@ -10,7 +10,7 @@
           </div>
       </div>
 
-      <button class="btn" (click)="toggleBroadcast()" style="margin-left: 10vw;">
+      <button class="btn" [disabled]="videoChosen == false" (click)="toggleBroadcast()" style="margin-left: 10vw;">
         {{ broadcasting ? 'End' : 'Begin' }} broadcast
       </button>
     </div>
@@ -25,7 +25,7 @@
     </div>
 
     <div id='preview_container' style="text-align:center">
-      <h4> Stream Preview </h4>  
+      <h3> {{streamPreviewMessage}} </h3>  
       <canvas id='stream_preview'></canvas> <!-- this is for the decrypted data to be render in here -->
     </div>
 

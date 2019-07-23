@@ -12,6 +12,7 @@ declare var $: any;
 export class VideoComponent implements OnInit, AfterViewInit {
   private broadcasting = false; //this will be set to true when I start to broadcast
   private broadcastingMessage: string = 'You are currently not broadcasting a video';
+  private streamPreviewMessage: string = '';
   private fileName: string;
   private broadcastingInterval: any;
   private renderer: any;
@@ -19,6 +20,8 @@ export class VideoComponent implements OnInit, AfterViewInit {
   private streamPreview: any;
   private streamContext: any;
   private socket: any;
+  private selectedUser: string;
+  private videoChosen: boolean = false;
   private width: number = 300; //dimensiunile canvasului pentru preview(look in css - 400/200 normally  --400*200*3 pixels values)
   private height: number = 175;
 
@@ -29,12 +32,13 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.socketService.onStreamReceived((data:any) => { //cand se primeste streamul
       return this.onStreamReceived(data);
     })
-    console.warn('socketId', this.socket.id);
   }
 
   ngOnInit() {
     this.getChosenFileName();
     this.getDecryptedDataFromServer();
+    this.receiveUserDisconnectedEvent();
+    this.videoChosen = false; //did't select a video yet
   }
 
   ngAfterViewInit() {
@@ -66,10 +70,14 @@ export class VideoComponent implements OnInit, AfterViewInit {
     videoNode.src = fileURL;
     });
 
+    $('#chooseFile').bind('change', () => { //we need arrow function so we can acces this.videoChosen
+      this.videoChosen = true; //enable the button
+    });
   }
 
   private userSelected(userName: string) {
-    this.broadcastingMessage = 'You are currently watching a video streamed by ' + userName; //maybe this user must be taken from the graph
+    this.selectedUser = userName;
+    this.streamPreviewMessage = 'You are currently watching a video streamed by ' + userName;
   }
 
   private toggleBroadcast() {
@@ -154,6 +162,16 @@ export class VideoComponent implements OnInit, AfterViewInit {
     const context = this.streamPreview.getContext('2d');
     context.drawImage(decriptedCanvas, 0, 0, this.width, this.height);
     console.warn('pixels added to canvas');
+  }
+
+  private receiveUserDisconnectedEvent(): void {
+    this.socket.on('userDisconnected', (disconnectedUser) => {
+      console.warn('disconnectedUser', disconnectedUser);
+        this.socket.emit('leaveRoom', disconnectedUser.socketId); //leave disconnected user room
+        if (this.selectedUser === disconnectedUser.name) { //if the user that I received stream from has disconnected
+          this.streamPreviewMessage = this.selectedUser.toString() + ' has disconnected!';
+        }
+    });
   }
   
 }

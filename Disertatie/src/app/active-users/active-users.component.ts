@@ -38,7 +38,8 @@ export class ActiveUsersComponent implements OnInit {
           if (this.socket.currentUserHovered) {
             setTimeout(() => {
             let correspondingH3 = (<HTMLDivElement>document.getElementById(this.socket.currentUserHovered));
-            correspondingH3.style.backgroundColor = '#8BFC02'; //mark div with green so it receive broadcast stream from that user
+            if (correspondingH3)
+              correspondingH3.style.backgroundColor = '#8BFC02'; //mark div with green so it receive broadcast stream from that user
             }, 100); //leave this so the users list has time to refresh
           }
         }

@@ -21,11 +21,15 @@ io.on('connection', (socket) => {
     var currentSocketUser = new User(); //we need a way to store the current user
     var renderer;
     var cipher;
+    socket.leave(socket.id); //leave it's own room so it won't broadcast video to itself
 
     socket.on('disconnect', () => {
         console.warn('user disconnected');
         usersMap.delete(currentSocketUser.id); //delete from the map the user that logout
         socket.leaveAll();
+
+        //de emis un eveniment de deconectare catre ceilalti utilizatori(cu io) si de afisat un mesaj corespunzator pentru cazul in care un user era subscris la stream-ul lui
+        io.emit('userDisconnected', currentSocketUser);
     });
 
     socket.on('newUser', (newUser) => { //also send the uuid from client
@@ -58,7 +62,7 @@ io.on('connection', (socket) => {
         //console.log(rgbDecrypted);
         console.log('decryption done');
 
-        //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers
+        //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers (need not to send data to itself)
         io.to(socket.id).emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
     });
 
