@@ -52,7 +52,10 @@ export class ActiveUsersComponent implements OnInit {
     this.userSelected.emit(userName); //emit to the parent component (video)
     //change the broadcastingMessage string from video component to 'You are currently watching a video streamed by ' + userName
 
-    console.warn('need to connect to room', socketId); //can connect to a room only in server ?? maybe use graph instead of rooms ??
+    if (this.socket.room)
+      this.socket.emit('leaveRoom', this.socket.room); //leave the previous room if one existed
+    this.socket.emit('joinRoom', socketId); //can connect to a room only in server, maybe use graph instead of rooms ??
+    this.socket.room = socketId;
 
     //here we need to request stream from the selected user
     this.socketService.requestStream(userId);

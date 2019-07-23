@@ -70,5 +70,17 @@ io.on('connection', (socket) => {
         console.log('stream', streamBase64);
     });
 
+    socket.on('joinRoom', (roomName) => {
+        socket.join(roomName);
+        console.log(currentSocketUser.name, 'joined room ', roomName);
+        socket.room = roomName;
+    });
+
+    socket.on('leaveRoom', (roomName) => {
+        socket.leave(roomName);
+        console.log(currentSocketUser.name, 'left room ', roomName);
+        socket.room = '';
+    });
+
 });
 
