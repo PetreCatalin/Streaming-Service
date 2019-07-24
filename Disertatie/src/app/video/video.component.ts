@@ -77,7 +77,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private userSelected(userName: string) {
     this.selectedUser = userName;
-    this.streamPreviewMessage = 'You are currently watching a video streamed by ' + userName;
+    this.streamPreviewMessage = 'You are currently subscribed to ' + userName;
   }
 
   private toggleBroadcast() {
@@ -161,7 +161,6 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
     const context = this.streamPreview.getContext('2d');
     context.drawImage(decriptedCanvas, 0, 0, this.width, this.height);
-    console.warn('pixels added to canvas');
   }
 
   private receiveUserDisconnectedEvent(): void {
@@ -169,7 +168,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
       console.warn('disconnectedUser', disconnectedUser);
         this.socket.emit('leaveRoom', disconnectedUser.socketId); //leave disconnected user room
         if (this.selectedUser === disconnectedUser.name) { //if the user that I received stream from has disconnected
-          this.streamPreviewMessage = this.selectedUser.toString() + ' has disconnected!';
+          this.streamPreviewMessage = this.selectedUser.toString() + ' has disconnected! Broadcast has been interrupted!';
         }
     });
   }

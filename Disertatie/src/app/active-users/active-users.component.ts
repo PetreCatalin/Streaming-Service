@@ -26,13 +26,12 @@ export class ActiveUsersComponent implements OnInit {
       console.warn('current User', currentUser);  //currentUser.socketId 
     });
 
-    setInterval(() => { //refresh the list of users coming from server
+    setInterval(() => { //refresh the list of users coming from server at every 500 miliseconds
       this.socket.emit('getUsers', (users:any[]) => { //here users is usersMap from server
         if (this.allUsers.toString() !== users.toString()) { //refresh users array only if new users are coming or users are leaving
           //this keeps the green hover on selected user until it refreshes
           this.allUsers = users;
           this.users = users.filter(user => user.name !== this.currentUser.name); //don't add current user name in other users list
-          console.warn('other users', this.users); //user.socketId is the id of socket created on server for the current user
 
           //here hover again the user that i received stream from because at user refresh hover is lost
           if (this.socket.currentUserHovered) {
