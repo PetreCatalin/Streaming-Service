@@ -17,14 +17,14 @@ const io = socketIo(server); //instance of socket.io
 var usersMap = new UsersMap();
 
 io.on('connection', (socket) => {
-    console.warn('user connected');
+    //console.warn('user connected');
     var currentSocketUser = new User(); //we need a way to store the current user
     var renderer;
     var cipher;
     socket.leave(socket.id); //leave it's own room so it won't broadcast video to itself
 
     socket.on('disconnect', () => {
-        console.warn('user disconnected');
+        //console.warn('user disconnected');
         usersMap.delete(currentSocketUser.id); //delete from the map the user that logout
         socket.leaveAll();
 
@@ -57,10 +57,10 @@ io.on('connection', (socket) => {
             rgbPixelsClampedArray[i] = rgbPixels[i];
         var rgbEncrypted = cipher.encrypt(rgbPixelsClampedArray); //obtinem cele 60000 de valori ale pixelilor criptate
         //console.log(rgbEncrypted);
-        console.log('encrypted done');
+        //console.log('encrypted done');
         var rgbDecrypted = cipher.decrypt(rgbEncrypted);
         //console.log(rgbDecrypted);
-        console.log('decryption done');
+        //console.log('decryption done');
 
         //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers (need not to send data to itself)
         io.to(socket.id).emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
@@ -72,13 +72,13 @@ io.on('connection', (socket) => {
 
     socket.on('joinRoom', (roomName) => {
         socket.join(roomName);
-        console.log(currentSocketUser.name, 'joined room ', roomName);
+        //console.log(currentSocketUser.name, 'joined room ', roomName);
         socket.room = roomName;
     });
 
     socket.on('leaveRoom', (roomName) => {
         socket.leave(roomName);
-        console.log(currentSocketUser.name, 'left room ', roomName);
+        //console.log(currentSocketUser.name, 'left room ', roomName);
         socket.room = '';
     });
 

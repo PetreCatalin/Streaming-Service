@@ -23,7 +23,6 @@ export class ActiveUsersComponent implements OnInit {
   ngOnInit() {
     this.socket.emit('getCurrentUser', (currentUser: any) => {
       this.currentUser = currentUser;
-      console.warn('current User', currentUser);  //currentUser.socketId 
     });
 
     setInterval(() => { //refresh the list of users coming from server at every 500 miliseconds

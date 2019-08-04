@@ -46,7 +46,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
     this.streamPreview = document.getElementById('stream_preview');
     this.streamContext = this.streamPreview.getContext('2d');
     this.socket.emit('createElementRenderer', (data:any) => {
-      console.log('data', data);
+      //console.log('data', data);
     });
   }
 
@@ -99,7 +99,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private sendSnapshot() { //begin to start streaming to other users
     this.getEncryptedDataURL(this.videoPlayer, (data: any) => {
-      console.warn('data', data);
+      //console.warn('data', data);
       this.socketService.sendStream(data); //trimit textul catre ceilalti utilizatori
     });
   }
