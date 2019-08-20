@@ -1,6 +1,7 @@
 import UsersMap from './usersMap';
 import User from './user';
 import ElementRenderer from './ElementRenderer';
+import base64js from 'base64-js';
 
 //https://timonweb.com/posts/how-to-enable-es6-imports-in-nodejs/
 
@@ -50,20 +51,26 @@ io.on('connection', (socket) => {
         cipher = renderer.cipher;
     });
 
-    socket.on('sendDataToBeEncrypted', (rgbPixels) => {
+    socket.on('sendDataToBeEncrypted', (base64Encrypted) => {
+        let rgbPixels = base64js.toByteArray(base64Encrypted);
         let arraySize = renderer.width * renderer.height * 3; //200*100*3 we need to create a new array of type Uint8ClampedArray
         var rgbPixelsClampedArray = new Uint8ClampedArray(arraySize); //we need to create a new array of type Uint8ClampedArray
-        for (let i = 0; i<arraySize;++i)
+        for (let i = 0; i< arraySize; ++i)
             rgbPixelsClampedArray[i] = rgbPixels[i];
+        console.time('Encryption Time: ');
         var rgbEncrypted = cipher.encrypt(rgbPixelsClampedArray); //obtinem cele 60000 de valori ale pixelilor criptate
+        console.timeEnd('Encryption Time: ');
         //console.log(rgbEncrypted);
         //console.log('encrypted done');
+        console.time('Decryption Time: ');
         var rgbDecrypted = cipher.decrypt(rgbEncrypted);
         //console.log(rgbDecrypted);
         //console.log('decryption done');
 
+        let base64Decrypted = base64js.fromByteArray(rgbDecrypted);
         //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers (need not to send data to itself)
-        io.to(socket.id).emit('sendDectyptedDataToClient', rgbDecrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
+        io.to(socket.id).emit('sendDecryptedDataToClient', base64Decrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
+        console.timeEnd('Decryption Time: ');
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori

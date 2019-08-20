@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 import { RgbUtils } from '../utils/RgbUtils';
+import base64js from 'base64-js';
 
+//var base64js = require('base64-js');
 declare var $: any;
 
 @Component({
@@ -89,7 +91,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
 
   private startBroadcasting() {
     this.broadcastingMessage = 'You are currently broadcasting a video';
-    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 400); //send data every 100 miliseconds normally, change for testing
+    this.broadcastingInterval = setInterval(() => this.sendSnapshot(), 100); //send data every 100 miliseconds normally, change for testing
   }
 
   private endBroadcasting() {
@@ -109,15 +111,17 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private getEncryptedDataURL(element:any, callback:any) {
-    console.time('Encryption Process'); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
+    console.time('Encryption Time: '); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
     const canvas = this.createAndDrawInCanvas(element);
     const imgData = this.getImageData(canvas.getContext('2d'));
     const rgbPixels: Uint8ClampedArray = RgbUtils.toRgbUint8ClampedArray(imgData.data); //fac to rgb pentru cripare, voi face mai tarziu to rgba pentru decriptate
     //console.warn('imgData.data', imgData.data); //80000
     console.warn('rgbPixelsSentToEnctyption', rgbPixels); // (200*100*4)80000 => (200*100*3)60000 (se elimina ultimul filtru)
 
-    this.socket.emit('sendDataToBeEncrypted', rgbPixels); //trimit pixelii care vor fi criptati pe server
-    console.timeEnd('Encryption Process');
+    let base64Encrypted = base64js.fromByteArray(rgbPixels);
+    //console.log(base64Encrypted);
+    this.socket.emit('sendDataToBeEncrypted', base64Encrypted); //trimit pixelii care vor fi criptati pe server sub forma de base64
+    console.timeEnd('Encryption Time: ');
   }
 
   private createAndDrawInCanvas(element: any) {
@@ -138,7 +142,9 @@ export class VideoComponent implements OnInit, AfterViewInit {
   }
 
   private getDecryptedDataFromServer() {
-    this.socket.on('sendDectyptedDataToClient', (rgbDecrypted) => {
+    this.socket.on('sendDecryptedDataToClient', (base64Decrypted) => {
+      console.time('Decryption Time: ');
+      let rgbDecrypted = base64js.toByteArray(base64Decrypted);
       //console.warn('rgbPixelsDecryptedFromServer', rgbDecrypted); //(200*100*3) 60000
       let rgbPixels = []; let size = this.width * this.height * 3;
       for (let i=0;i<size;++i) {
@@ -148,6 +154,7 @@ export class VideoComponent implements OnInit, AfterViewInit {
       console.warn('rgbaPixelsDecrypted', rgbaDecrypted);
 
       this.addDecryptedPixelsToPreviewCanvas(rgbaDecrypted);
+      console.timeEnd('Decryption Time: ');
     });
   }
 
