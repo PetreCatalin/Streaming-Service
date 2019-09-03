@@ -35,7 +35,7 @@ export class ElementRenderer {
     }
 
     public getEncryptedDataURL(element:any, callback:any) {
-        console.time('Encryption Process'); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
+        //console.time('Encryption Process'); //console.time(x) and console.timeEnd(x) --> this measure how much time the function between them needs to execute
     
         const canvas = this.createAndDrawInCanvas(element);
         const imgData = this.getImageData(canvas.getContext('2d'));
@@ -43,11 +43,11 @@ export class ElementRenderer {
         const rgbEncrypted = this.cipher.encrypt(rgbPixels);
         callback(base64js.fromByteArray(rgbEncrypted));
     
-        console.timeEnd('Encryption Process');
+        //console.timeEnd('Encryption Process');
     }
 
     public decryptDataURLInCanvas(data:any, canvas:any, callback:any) {
-        console.time('Decryption Process');
+        //console.time('Decryption Process');
     
         const dCanvas = this.createCanvas();
         const dContext = dCanvas.getContext('2d');
@@ -64,6 +64,6 @@ export class ElementRenderer {
         context.drawImage(dCanvas, 0, 0, canvas.width, canvas.height);
         if (callback) callback(canvas);
     
-        console.timeEnd('Decryption Process');
+        //console.timeEnd('Decryption Process');
     }
 }

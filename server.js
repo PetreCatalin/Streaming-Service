@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
     //console.warn('user connected');
     var currentSocketUser = new User(); //we need a way to store the current user
     var renderer;
-    var cipher;
+    var cipher; //src/pwlcm_spic_cipher cu cele 3 metode de init_key, encrypt, decrypt
     socket.leave(socket.id); //leave it's own room so it won't broadcast video to itself
 
     socket.on('disconnect', () => {
@@ -57,12 +57,12 @@ io.on('connection', (socket) => {
         var rgbPixelsClampedArray = new Uint8ClampedArray(arraySize); //we need to create a new array of type Uint8ClampedArray
         for (let i = 0; i< arraySize; ++i)
             rgbPixelsClampedArray[i] = rgbPixels[i];
-        console.time('Encryption Time: ');
+        //console.time('Encryption Time: ');
         var rgbEncrypted = cipher.encrypt(rgbPixelsClampedArray); //obtinem cele 60000 de valori ale pixelilor criptate
-        console.timeEnd('Encryption Time: ');
+        //console.timeEnd('Encryption Time: ');
         //console.log(rgbEncrypted);
         //console.log('encrypted done');
-        console.time('Decryption Time: ');
+        //console.time('Decryption Time: ');
         var rgbDecrypted = cipher.decrypt(rgbEncrypted);
         //console.log(rgbDecrypted);
         //console.log('decryption done');
@@ -70,11 +70,11 @@ io.on('connection', (socket) => {
         let base64Decrypted = base64js.fromByteArray(rgbDecrypted);
         //here we send data only to this socket's room (room with name socketId) --send data only to it's subscribers (need not to send data to itself)
         io.to(socket.id).emit('sendDecryptedDataToClient', base64Decrypted);  //rgbDecrypted este trimis catre client si pus in canvas preview ca rgbaDecrypted
-        console.timeEnd('Decryption Time: ');
+        //console.timeEnd('Decryption Time: ');
     });
 
     socket.on('stream', (streamBase64) => { //streamul trimis catre ceilalti utilizatori
-        console.log('stream', streamBase64);
+        //console.log('stream', streamBase64);
     });
 
     socket.on('joinRoom', (roomName) => {

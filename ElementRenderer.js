@@ -9,8 +9,8 @@ export default class ElementRenderer {
     this.height = options.height
     this.format = options.format || 'image/png'
 
-    this.cipher = new PwlcmSpicCipher3();
-    this.cipher.initKey({ x1: 0.1567, y1: 0.3219, r1: 0.2, m1: 2015,
+    this.cipher = new PwlcmSpicCipher3(); //src/pwlcm_spic_cipher cu cele 3 metode de init_key, encrypt, decrypt
+    this.cipher.initKey({ x1: 0.1567, y1: 0.3219, r1: 0.2, m1: 2015, //src/pwlcm_spic_cipher se apeleaza init_key si se initializeaza cheia in pwlcm_spic_key
                  x2: 0.4567, y2: 0.1111, r2: 0.3, m2: 2016, iv: 123456 });
   }
 
@@ -36,7 +36,7 @@ export default class ElementRenderer {
   }
 
   getEncryptedDataURL(element, callback) {
-    console.time('Encryption Process')
+    //console.time('Encryption Process')
 
     const canvas = this._createAndDrawInCanvas(element)
     const imgData = this._getImageData(canvas.getContext('2d'))
@@ -45,11 +45,11 @@ export default class ElementRenderer {
 
     callback(base64js.fromByteArray(rgbEncrypted));
 
-    console.timeEnd('Encryption Process')
+    //console.timeEnd('Encryption Process')
   }
 
   decryptDataURLInCanvas(data, canvas, callback) {
-    console.time('Decryption Process')
+    //console.time('Decryption Process')
 
     const dCanvas = this._createCanvas()
     const dContext = dCanvas.getContext('2d')
@@ -66,6 +66,6 @@ export default class ElementRenderer {
     context.drawImage(dCanvas, 0, 0, canvas.width, canvas.height);
     if (callback) callback(canvas)
 
-    console.timeEnd('Decryption Process')
+    //console.timeEnd('Decryption Process')
   }
 }
